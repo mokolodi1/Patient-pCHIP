@@ -3,6 +3,8 @@
 
 from optparse import OptionParser
 parser = OptionParser()
+parser.add_option("--scaffold",dest="scaffold",action="store",default=None, help=
+	" Scaffold network to map patient data to")
 (opts, args) = parser.parse_args()
 from pathway import Pathway, NodeConsistencyValidator, BasicPathValidator
 import networkx as nx
@@ -76,7 +78,7 @@ def parseList(inputs, valid_nodes):
 	return (input_set, exclude_set)
 
 
-network, net_nodes, phos_network, valid_phos_edges, gene_to_peptides_map = parseFullNet("scaffold.txt")
+network, net_nodes, phos_network, valid_phos_edges, gene_to_peptides_map = parseFullNet(opts.scaffold)
 
 upstream_nodes, upstream_notInNetwork = parseList(args[0], net_nodes)
 downstream_nodes, downstream_notInNetwork = parseList(args[1], net_nodes)
