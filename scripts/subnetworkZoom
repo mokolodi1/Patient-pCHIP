@@ -1,0 +1,150 @@
+#!/usr/bin/env python
+
+# For each set of genes, find the subnetwork connecting them (up to 2 intermediate genes)
+import os, sys, re
+import networkx
+from optparse import OptionParser
+from scipy import stats as st
+import numpy as np
+from collections import defaultdict
+parser = OptionParser()
+parser.add_option("-n","--network",dest="network",action="store",default=None,help="Network in .sif format")
+parser.add_option("--hallmarks",dest="hallmarks",action="store",default=None,help="Hallmark definitions")
+parser.add_option("-e","--undirected_edge_type_def",dest="undirected_edge_type_def",action="store",default=None,help="Text file list if undirected edge types for this pathway")
+parser.add_option("-o","--output",dest="output",action="store",default=None,help="output directory")
+(opts, args) = parser.parse_args()
+
+# local imports
+from tiedie_util import *
+from pathway import Pathway, NodeConsistencyValidator, BasicPathValidator
+
+def getP(z_score):
+	# 2-tailed p-value
+	return (1 - st.norm.cdf(z_score))*2
+
+def parseNet(file):
+
+	network = {}
+	edges = set()
+	nodes = set()
+	for line in open(file, 'r'):
+
+		A, i, B = line.rstrip().split('\t')
+
+		if A not in network:
+			network[A] = set()
+
+		network[A].add((i, B))
+		edges.add( (A, B) )
+		nodes.add(A)
+		nodes.add(B)
+
+	return (network, edges, nodes)
+
+def parseLST(file):
+
+	genes = set()
+	fh = open(file, 'r')
+	#header = True
+	for line in fh:
+		#if header:
+		gene = line.rstrip().split('\t')[0]
+		genes.add(gene)
+
+	return genes
+
+def parseHallmarks(file):
+
+	hallmarks = defaultdict(set)
+	fh = open(file, 'r')
+	#header = True
+	for line in fh:
+		parts = line.rstrip().split('\t')
+		hallmark = parts[0]
+		hallmarks[hallmark] = set(parts[1:len(parts)])
+
+	return hallmarks
+
+
+network, edge_direction, network_nodes = parseNet(opts.network)
+hallmarks = parseHallmarks(opts.hallmarks)
+undirected_edge_types = parseLST(opts.undirected_edge_type_def)
+if not os.path.isdir(opts.output):
+	os.mkdir(opts.output)
+
+print "Writing input network nodes to "+opts.output+"/network_nodes.txt"
+fh = open(opts.output+'/'+'network_nodes.txt', 'w')
+fh.write('Input_Network\t')
+for node in network_nodes:
+	fh.write( node+'\t' )
+fh.write('\n')
+fh.close()
+
+gene_memberships = {}
+for hallmark in hallmarks:
+	hallmark_genes = hallmarks[hallmark]
+
+	# the set of hallmark genes is the 'seed' or search set of nodes within the supplied pathway
+	search_set = hallmark_genes
+
+	# For each pair of seed nodes, find the shortest path and retain those edges. 
+	validator = BasicPathValidator({'source':search_set, 'target':search_set})
+	pathway = Pathway(network, validator=validator, opts={'undirected_edges':set(undirected_edge_types)})
+
+	edges = set()
+	# First add all trivial edges between nodes
+	e = pathway.allPathEdges(search_set, search_set, 2, noSelf=True)
+	edges = edges.union(e)
+
+	for nodeA in search_set:
+		shortest = None
+		shortest_len = 1000
+		for nodeB in search_set:
+			# find the node that it's closest to and add just those edges
+			if nodeA == nodeB:
+				continue
+			e = None
+			try:
+				# will fail if not in the graph, skip it if it does..
+				e = pathway.getShortestPath(nodeA, nodeB)
+			except:
+				continue
+
+			if len(e) < shortest_len:
+				shortest = e
+				shortest_len = len(e)
+
+		if shortest is None:
+			continue
+		edges = edges.union(shortest)
+		
+	# make a NX object from this
+	G = networkx.Graph()
+	for (source, i, target) in edges:
+		if (source, target) in edge_direction:
+			G.add_edge(source, target, i=i)
+		elif (target, source) in edge_direction:
+			G.add_edge(target, source, i=i)
+		else:
+			raise Exception("Error: edge should be in network!")
+
+	# write the subnetwork out
+	print "Writing output to "+opts.output+"/"+hallmark
+	file = opts.output+'/'+'_'.join(hallmark.split(' '))+'.txt'
+	fh = open(file, 'w')
+	fh.write('\t'.join(['name', 'interaction', 'nameB'])+'\n')
+	for edge in G.edges():
+		geneA, geneB = edge
+		interaction = G[geneA][geneB]['i']
+		fh.write('\t'.join([geneA, interaction, geneB])+'\n')
+	fh.close()
+
+
+	# write just the subnetwork nodes that are *also* in the hallmark
+	file = opts.output+'/'+'_'.join(hallmark.split(' '))+'.nodes.txt'
+	fh = open(file, 'w')
+	for node in G.nodes():
+			if node not in hallmark_genes:
+				continue
+			fh.write(node+'\n')
+	fh.close()
