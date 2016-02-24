@@ -1,0 +1,110 @@
+<template name="appBody">
+  <div class="container">
+    {{>Template.dynamic template=content data=jobId}}
+  </div>
+</template>
+
+<template name="pageNotFound">
+  <div class="jumbotron" style="margin-top: 10px;">
+    <h1>Page not found!</h1>
+    <p>
+      I wonder how you ended up here...
+    </p>
+  </div>
+</template>
+
+<template name="create">
+  <h1>Create</h1>
+
+  {{#autoForm id="create-job" collection=Jobs}}
+    {{> afQuickField name="firstList" type="textarea" rows=5}}
+    {{> afQuickField name="secondList" type="textarea" rows=5}}
+    <button type="submit" class="btn btn-primary">Run</button>
+  {{/autoForm}}
+</template>
+
+<template name="showResult">
+  <h1>
+    Result
+    <a href={{pathFor "create"}} class="pull-right btn btn-default btn-lg">
+      Create another
+      {{! TODO: have they saved the URL?}}
+    </a>
+  </h1>
+  {{#if Template.subscriptionsReady}}
+    {{#with getJob}}
+      {{#if compare status "done"}}
+
+        <h1>Done!</h1>
+
+        <p>
+          perhaps we should list the input? also the date created.
+        </p>
+        <p>
+          be sure to save this url
+        </p>
+      {{else}}
+        {{#if compare status "running"}}
+          <div class="jumbotron">
+            <h1>Running...</h1>
+            <p>
+              Your job is running and will be completed soon!
+            </p>
+          </div>
+        {{else}}
+          <div class="alert alert-danger" role="alert">
+            <h4>Error running job</h4>
+            <p>
+              We've run into some trouble running your job. It's possible but
+              we are performing maintenance on the site, so please try your
+              job again in a couple minutes. If it still doesn't work, please
+              let us know by clicking the button below.
+            </p>
+            <p>
+              Error description: <code>{{error_description}}</code>
+            </p>
+            <p>
+              The id of this job is <code>{{_id}}</code>. Please mention this
+              id if you email us about this job.
+            </p>
+            <p>
+              <a href="mailto:mokolodi1@gmail.com?Subject=Job%20error:%20{{_id}}"
+                  type="button" class="btn btn-primary">
+                Contact the developers
+              </a>
+            </p>
+          </div>
+        {{/if}}
+      {{/if}}
+    {{/with}}
+
+    {{! This will be shown if the data has finished loading but there's no
+        job that matches the query. This would imply the job _id in the URL
+        is invalid}}
+    {{#unless getJob}}
+    <div class="alert alert-danger" role="alert">
+      <h4>Invalid URL</h4>
+      <p>
+        You seem to have entered an invalid URL.
+      </p>
+      <p>
+        If you believe you are seeing this this message in error, please
+        contact the developers.
+      </p>
+      <p>
+        <a href="mailto:mokolodi1@gmail.com?Subject=Invalid%20URL"
+            type="button" class="btn btn-primary">
+          Contact the developers
+        </a>
+      </p>
+    </div>
+    {{/unless}}
+  {{else}}
+    <div class="alert alert-info" role="alert">
+      <h4>Loading...</h4>
+      <p>
+        The data will arrive soon!
+      </p>
+    </div>
+  {{/if}}
+</template>
