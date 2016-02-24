@@ -16,6 +16,7 @@ RUN pip install networkx
 
 EXPOSE 3000
 ENV PORT 3000
+ENV MONGO_URL="mongodb://localhost:27017/pCHIP"
 
 RUN mkdir /bundle
 ENV RELEASE=1.2.1
@@ -24,10 +25,11 @@ RUN meteor --release $RELEASE update
 ADD ./build /build
 WORKDIR /build
 
+# # do this before instead
 # RUN meteor build --release $RELEASE --directory ..
-# WORKDIR /app/build/bundle/programs/server
-# RUN npm install
-# WORKDIR /app/build/bundle
+
+WORKDIR /build/bundle/programs/server
+RUN npm install
 
 WORKDIR /build/bundle
 

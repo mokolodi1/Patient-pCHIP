@@ -17,8 +17,8 @@
   <h1>Create</h1>
 
   {{#autoForm id="create-job" collection=Jobs}}
-    {{> afQuickField name="firstList" type="textarea" rows=5}}
-    {{> afQuickField name="secondList" type="textarea" rows=5}}
+    {{> afQuickField name="upstreamProteins" type="textarea" rows=5}}
+    {{> afQuickField name="downstreamProteins" type="textarea" rows=5}}
     <button type="submit" class="btn btn-primary">Run</button>
   {{/autoForm}}
 </template>
@@ -64,7 +64,7 @@
               Error description: <code>{{error_description}}</code>
             </p>
             <p>
-              The id of this job is <code>{{_id}}</code>. Please include this
+              The id of this job is <code>{{_id}}</code>. Please mention this
               id if you email us about this job.
             </p>
             <p>
@@ -82,22 +82,22 @@
         job that matches the query. This would imply the job _id in the URL
         is invalid}}
     {{#unless getJob}}
-    <div class="alert alert-danger" role="alert">
-      <h4>Invalid URL</h4>
-      <p>
-        You seem to have entered an invalid URL.
-      </p>
-      <p>
-        If you believe you are seeing this this message in error, please
-        contact the developers.
-      </p>
-      <p>
-        <a href="mailto:mokolodi1@gmail.com?Subject=Invalid%20URL"
-            type="button" class="btn btn-primary">
-          Contact the developers
-        </a>
-      </p>
-    </div>
+      <div class="alert alert-danger" role="alert">
+        <h4>Invalid URL</h4>
+        <p>
+          You seem to have entered an invalid URL.
+        </p>
+        <p>
+          If you believe you are seeing this this message in error, please
+          contact the developers.
+        </p>
+        <p>
+          <a href="mailto:mokolodi1@gmail.com?Subject=Invalid%20URL"
+              type="button" class="btn btn-primary">
+            Contact the developers
+          </a>
+        </p>
+      </div>
     {{/unless}}
   {{else}}
     <div class="alert alert-info" role="alert">
