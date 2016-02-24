@@ -1,6 +1,7 @@
 Q = Meteor.npmRequire('q');
 ntemp = Meteor.npmRequire('temp').track();
 spawn = Npm.require('child_process').spawn;
+path = Npm.require('path');
 
 Meteor.startup(function () {
   // Update the jobs that were running when the server restarted
@@ -90,18 +91,17 @@ Meteor.methods({
     }
 
     // run the python code and update the job when we're done
-    var workDir = ntemp.mkdirSync("pCHIP");
-
-    let python = Meteor.settings.python;
-    let mapPatient = Meteor.settings.mapPatient;
+    let workDir = ntemp.mkdirSync("pCHIP");
 
     let upstreamProteins = seperateByColons(formValues.upstreamProteins);
     let downstreamProteins = seperateByColons(formValues.downstreamProteins);
 
-    spawnCommand(python, [
-      mapPatient,
+    spawnCommand(Meteor.settings.mapPatient, [
       upstreamProteins,
       downstreamProteins,
+      workDir,
+      Meteor.settings.scaffold,
+      Meteor.settings.gene_universe,
     ], workDir)
       .then(Meteor.bindEnvironment(function () {
         console.log("workDir:", workDir);
@@ -111,7 +111,8 @@ Meteor.methods({
             status: "done",
           }
         });
-      }, internalError));
+      }, internalError))
+      .catch(internalError);
 
     // return the job _id so the client can go to the right URL
     return jobId;

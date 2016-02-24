@@ -1,4 +1,5 @@
 {
-  "python": "python2.7",
-  "mapPatient": "/Users/mokolodi1/work/evan/Patient-pCHIP/scripts/mapPatient.py"
+  "mapPatient": "/Users/mokolodi1/work/evan/Patient-pCHIP/scripts/run.sh",
+  "scaffold": "/Users/mokolodi1/work/evan/Patient-pCHIP/scripts/drake_paull_scaffold.txt",
+  "gene_universe": "/Users/mokolodi1/work/evan/Patient-pCHIP/scripts/multinet.genes.lst"
 }
