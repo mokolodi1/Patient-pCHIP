@@ -11,8 +11,8 @@ function dateCreatedAutoValue () {
 
 Jobs = new Meteor.Collection("jobs");
 Jobs.attachSchema(new SimpleSchema({
-  firstList: { type: [String] },
-  secondList: { type: [String] },
+  upstreamProteins: { type: [String] },
+  downstreamProteins: { type: [String] },
 
   dateCreated: { type: Date, autoValue: dateCreatedAutoValue },
 

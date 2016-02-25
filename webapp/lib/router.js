@@ -8,7 +8,6 @@ FlowRouter.route("/", {
 FlowRouter.route("/result/:jobId", {
   name: "showResult",
   action: function(params) {
-    console.log("params:", params);
     BlazeLayout.render("appBody", {
       content: "showResult",
       jobId: params.jobId,

@@ -1,9 +1,11 @@
 Q = Meteor.npmRequire('q');
+ntemp = Meteor.npmRequire('temp').track();
+spawn = Npm.require('child_process').spawn;
+path = Npm.require('path');
 
 Meteor.startup(function () {
   // Update the jobs that were running when the server restarted
   // to be status "error" and have a nice error message.
-  console.log("updating");
   Jobs.update({
     status: "running",
   }, {
@@ -14,14 +16,51 @@ Meteor.startup(function () {
   });
 });
 
+// adapted from https://gist.github.com/Stuk/6226938
+function spawnCommand (command, args, cwd) {
+  console.log("command:", command);
+  if (args && !args.every(function (arg) {
+        var type = typeof arg;
+        console.log("arg, type:", arg, type);
+        return type === "boolean" || type === "string" || type === "number";
+      })) {
+    return Q.reject(new Error("All arguments must be a boolean, string or number"));
+  }
+
+  var deferred = Q.defer();
+
+  // // TODO: what happens to stdout/stderr?
+  // var stdoutPath = path.join(cwd, "./stdout.log");
+  // var stdout = fs.openSync(stdoutPath, "a");
+  // var stderrPath = path.join(cwd, "./stderr.log");
+  // var stderr = fs.openSync(stderrPath, "a");
+  var proc = spawn(command, args, {
+    cwd: cwd,
+    // stdio: ["ignore", stdout, stderr]
+  });
+
+  proc.on("error", deferred.reject);
+  proc.on("exit", deferred.resolve);
+
+  return deferred.promise;
+};
+
+function seperateByColons (array) {
+  return _.reduce(array.slice(1), function (memo, curr) {
+    return memo + ":" + curr;
+  }, array[0]);
+}
+
 Meteor.methods({
   runJob: function (formValues) {
     // TODO: figure out why the .pick method isn't working
-    // Jobs.simpleSchema().pick(["firstList", "secondList"]);
-    check(formValues, new SimpleSchema({
-      firstList: { type: [String] },
-      secondList: { type: [String] },
-    }));
+    // ;
+    check(formValues, Jobs.simpleSchema().pick([
+      "upstreamProteins",
+      "upstreamProteins.$",
+      "downstreamProteins",
+      "downstreamProteins.$"
+    ]));
 
     // insert into the jobs collection
     var jobId = Jobs.insert(formValues);
@@ -52,8 +91,21 @@ Meteor.methods({
     }
 
     // run the python code and update the job when we're done
-    Q.delay(5000)
+    let workDir = ntemp.mkdirSync("pCHIP");
+
+    let upstreamProteins = seperateByColons(formValues.upstreamProteins);
+    let downstreamProteins = seperateByColons(formValues.downstreamProteins);
+
+    spawnCommand(Meteor.settings.mapPatient, [
+      upstreamProteins,
+      downstreamProteins,
+      workDir,
+      Meteor.settings.scaffold,
+      Meteor.settings.gene_universe,
+    ], workDir)
       .then(Meteor.bindEnvironment(function () {
+        console.log("workDir:", workDir);
+
         Jobs.update(jobId, {
           $set: {
             status: "done",
