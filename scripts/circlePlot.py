@@ -197,7 +197,7 @@ def getColor(val, color_scheme_def):
 
 def plotScale(imgFile, minVal, maxVal):
 	imgSize = (2, 4)
-	fig = plt.figure(figsize=imgSize, dpi=100, frameon=True, facecolor='w')
+	fig = plt.figure(figsize=imgSize, dpi=300, frameon=True, facecolor='w')
 	for i in range(10):
 		val = minVal+i*(maxVal-minVal)/10
 		col = getColor(val, minVal, maxVal)
@@ -289,7 +289,7 @@ def getPolarSegments(t0, t1, innerRad, outerRad):
 def plotCircle(imgFile, label = "", centerCol = rgb(255, 255, 255).tohex(), circleCols = [[rgb(200, 200, 200).tohex()]], mutationNumbers = None, wedge_idx = None, innerRadTotal=0.2, outerRadTotal=0.5, width = 5):
 	## image settings
 	imgSize = (width, width)
-	fig = plt.figure(figsize=imgSize, dpi=100, frameon=True, facecolor='w')
+	fig = plt.figure(figsize=imgSize, dpi=300, frameon=True, facecolor='w')
 	axes([0, 0, 1, 1], frameon=True, axisbg='w')
 	axis('off')
 	circleWid = (outerRadTotal-innerRadTotal)/float(len(circleCols))

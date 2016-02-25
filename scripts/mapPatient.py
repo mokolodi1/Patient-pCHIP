@@ -97,5 +97,7 @@ for edge in edges:
 	graph.add_edge(edge[0], edge[2])
 node_centrality = nx.betweenness_centrality(graph)
 
+# add any nodes with a '-none>' edge
+
 for edge in edges:
 	print '\t'.join(edge)
