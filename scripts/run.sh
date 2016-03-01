@@ -30,7 +30,7 @@ rm -f /tmp/1.tmp
 # and generate subnetworks corresponding to each hallmark of cancer
 $BASEDIR/bin/subnetworkZoom --network $output/patient-network.sif \
 	--hallmarks $BASEDIR/GSEA_SETS/hallmarks.small \
-	-e undirected_edge_types.txt \
+	-e $BASEDIR/undirected_edge_types.txt \
 	--output $output
 
 # do enrichment anlysis
@@ -40,7 +40,7 @@ export MYPERLDIR=${BASEDIR}/PERL-TOOLS/perl
 $BASEDIR/PERL-TOOLS/perl/transpose.pl $output/patient-network.lst | sed -e 's/^/TieDIE	/' > $output/network_nodes.txt
 
 # run enrichment test
-$BASEDIR/PERL-TOOLS/perl/sets_overlap.pl ./GSEA_SETS/hallmarks.small \
+$BASEDIR/PERL-TOOLS/perl/sets_overlap.pl $BASEDIR/GSEA_SETS/hallmarks.small \
 	$output/network_nodes.txt \
 	-U ${gene_universe} -p 1 \
 	> $output/enrichment.txt

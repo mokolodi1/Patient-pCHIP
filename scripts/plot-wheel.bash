@@ -28,7 +28,7 @@ grep -v '^>' ${enrichment_file} | cut -d ',' -f 1,2 | sed -e 's/,/	/g' -e 's/	-/
 ${BASEDIR}/PERL-TOOLS/perl/transpose.pl 1.tmp > ${output_folder}/input.data
 
 # make include.samples and include.features
-cp GSEA_SETS/hallmarks.order ${output_folder}/include.samples
+cp ${BASEDIR}/GSEA_SETS/hallmarks.order ${output_folder}/include.samples
 echo 'enrichment' > ${output_folder}/include.features
 
 mkdir "${output_folder}/img"
