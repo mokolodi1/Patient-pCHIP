@@ -49,3 +49,5 @@ $BASEDIR/PERL-TOOLS/perl/sets_overlap.pl $BASEDIR/GSEA_SETS/hallmarks.small \
 $BASEDIR/plot-wheel.bash $output/enrichment.txt \
 	$BASEDIR/GSEA_SETS/colors.default.txt \
 	$output
+
+$BASEDIR/mergeImages.py --wheel $output/hallmarks.png --text $BASEDIR/Text.png --output $output
