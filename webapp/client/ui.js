@@ -50,4 +50,24 @@ Template.listGenes.onRendered(function () {
   instance.$('[data-toggle="tooltip"]').tooltip();
 });
 
-// Template.pChipResult
+// Template.rememberThisUrl
+
+Session.setDefault("remindToSaveUrl", true);
+
+Template.rememberThisUrl.onRendered(function () {
+  let instance = this;
+
+  instance.$('[data-toggle="tooltip"]').tooltip();
+});
+
+Template.rememberThisUrl.helpers({
+  remindToSaveUrl: function () {
+    return Session.get("remindToSaveUrl");
+  },
+});
+
+Template.rememberThisUrl.events({
+  "click #dismissRemindSaveUrl": function (event, instance) {
+    Session.set("remindToSaveUrl", false);
+  },
+});
