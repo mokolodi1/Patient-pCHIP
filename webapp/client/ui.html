@@ -34,15 +34,7 @@
   {{#if Template.subscriptionsReady}}
     {{#with getJob}}
       {{#if compare status "done"}}
-
-        <h1>Done!</h1>
-
-        <p>
-          perhaps we should list the input? also the date created.
-        </p>
-        <p>
-          be sure to save this url
-        </p>
+        {{> jobDoneResult}}
       {{else}}
         {{#if compare status "running"}}
           <div class="jumbotron">
@@ -105,6 +97,64 @@
       <p>
         The data will arrive soon!
       </p>
+    </div>
+  {{/if}}
+</template>
+
+<template name="jobDoneResult">
+  {{> rememberThisUrl}}
+
+
+  <h3>Input</h3>
+  <h4>Upstream proteins</h4>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 col-xs-12">
+      {{> listGenes upstreamProteins}}
+    </div>
+  </div>
+
+  <h4>Downstream proteins</h4>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 col-xs-12">
+      {{> listGenes downstreamProteins}}
+    </div>
+  </div>
+
+  <h3>pCHIP</h3>
+  {{> pChipResult this}}
+</template>
+
+<template name="listGenes">
+  <ul class="list-group">
+    {{#each this}}
+      <a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{this}}"
+          data-toggle="tooltip" title="View in GeneCards"
+          class="list-group-item" target="_blank">
+        {{this}}
+      </a>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="pChipResult">
+  {{#with FS.GetFile "blobs" result.hallmarksBlobId}}
+    <a href="{{this.url}}" target="_blank">
+      <img src="{{this.url}}" alt="" style="width: 100%;">
+    </a>
+  {{/with}}
+</template>
+
+<template name="rememberThisUrl">
+  {{#if remindToSaveUrl}}
+    <div class="alert alert-warning alert-dismissible" role="alert"
+        style="display: inline-block; margin-top: 25px;">
+      <button id="dismissRemindSaveUrl" type="button" class="close"
+          data-toggle="tooltip" title="Don't show again">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Heads up!</strong>
+      Be sure to save this page's URL if you'd like to access this result
+      later.
     </div>
   {{/if}}
 </template>

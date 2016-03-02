@@ -1,4 +1,4 @@
-export MONGO_URL="mongodb://localhost:27017/pCHIP"
+# export MONGO_URL="mongodb://localhost:27017/pCHIP"
 
 settingsPath=/Users/mokolodi1/work/evan/Patient-pCHIP/config/teo/settings.json
 

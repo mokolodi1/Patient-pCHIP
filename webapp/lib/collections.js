@@ -29,7 +29,10 @@ Jobs.attachSchema(new SimpleSchema({
   error_description: { type: String, optional: true },
 
   result: {
-    type: String,
+    type: new SimpleSchema({
+      hallmarksBlobId: { type: String },
+      networkBlobId: { type: String },
+    }),
     optional: true,
   },
 }));
@@ -38,4 +41,19 @@ Jobs.allow({
   insert: function () {
     return true;
   },
+});
+
+
+
+BlobStore = new FS.Store.GridFS("blobs");
+
+Blobs = new FS.Collection("blobs", {
+  stores: [BlobStore],
+});
+
+// users can download a blob if they know the _id
+Blobs.allow({
+  download: function (userId, doc) {
+    return true;
+  }
 });
