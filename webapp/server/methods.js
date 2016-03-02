@@ -2,6 +2,7 @@ Q = Meteor.npmRequire('q');
 ntemp = Meteor.npmRequire('temp').track();
 spawn = Npm.require('child_process').spawn;
 path = Npm.require('path');
+fs = Npm.require('fs');
 
 Meteor.startup(function () {
   // Update the jobs that were running when the server restarted
@@ -29,14 +30,14 @@ function spawnCommand (command, args, cwd) {
 
   var deferred = Q.defer();
 
-  // // TODO: what happens to stdout/stderr?
-  // var stdoutPath = path.join(cwd, "./stdout.log");
-  // var stdout = fs.openSync(stdoutPath, "a");
-  // var stderrPath = path.join(cwd, "./stderr.log");
-  // var stderr = fs.openSync(stderrPath, "a");
+  // TODO: what happens to stdout/stderr?
+  var stdoutPath = path.join(cwd, "./stdout.log");
+  var stdout = fs.openSync(stdoutPath, "a");
+  var stderrPath = path.join(cwd, "./stderr.log");
+  var stderr = fs.openSync(stderrPath, "a");
   var proc = spawn(command, args, {
     cwd: cwd,
-    // stdio: ["ignore", stdout, stderr]
+    stdio: ["ignore", stdout, stderr]
   });
 
   proc.on("error", deferred.reject);
@@ -96,6 +97,8 @@ Meteor.methods({
     let upstreamProteins = seperateByColons(formValues.upstreamProteins);
     let downstreamProteins = seperateByColons(formValues.downstreamProteins);
 
+    console.log("workDir:", workDir);
+    console.log("spawning...");
     spawnCommand(Meteor.settings.mapPatient, [
       upstreamProteins,
       downstreamProteins,
@@ -104,12 +107,23 @@ Meteor.methods({
       Meteor.settings.gene_universe,
     ], workDir)
       .then(Meteor.bindEnvironment(function () {
-        console.log("workDir:", workDir);
+        console.log("done with spawn");
+
+        console.log("loading into blobs");
+        let hallmarksBlob =
+            Blobs.insert(path.join(workDir, "merged_images.png"));
+        let patientNetworkBlob =
+            Blobs.insert(path.join(workDir, "patient-network.sif"));
+
 
         Jobs.update(jobId, {
           $set: {
             status: "done",
-          }
+            result: {
+              hallmarksBlobId: hallmarksBlob._id,
+              networkBlobId: patientNetworkBlob._id,
+            },
+          },
         });
       }, internalError))
       .catch(internalError);
