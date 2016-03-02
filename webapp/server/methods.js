@@ -107,14 +107,11 @@ Meteor.methods({
       Meteor.settings.gene_universe,
     ], workDir)
       .then(Meteor.bindEnvironment(function () {
-        console.log("done with spawn");
-
         console.log("loading into blobs");
         let hallmarksBlob =
             Blobs.insert(path.join(workDir, "merged_images.png"));
         let patientNetworkBlob =
             Blobs.insert(path.join(workDir, "patient-network.sif"));
-
 
         Jobs.update(jobId, {
           $set: {
@@ -125,6 +122,8 @@ Meteor.methods({
             },
           },
         });
+
+        console.log("done");
       }, internalError))
       .catch(internalError);
 
