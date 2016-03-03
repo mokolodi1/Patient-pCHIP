@@ -14,13 +14,26 @@
 </template>
 
 <template name="create">
-  <h1>Create</h1>
+  <h1>patient Cancer Hallmark Integrated Phospho Signature (pCHIPS)</h1>
+
+  <h4>Select scaffold network for patient subtype</h4>
+
+  <h2>Create</h2>
 
   {{#autoForm id="create-job" collection=Jobs}}
-    {{> afQuickField name="kinases" type="textarea" rows=5}}
-    {{> afQuickField name="mutations" type="textarea" rows=5}}
-    {{> afQuickField name="amps" type="textarea" rows=5}}
-    {{> afQuickField name="dels" type="textarea" rows=5}}
+	<div class="row">
+	<div class=" col-md-4 col-md-4 col-md-4 col-md-4">
+		<h4> Activated Kinases </h4>
+    	{{> afQuickField name="kinases" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		<h4> Mutated Genes </h4>
+    	{{> afQuickField name="mutations" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		<h4> Copy Number / Amplifications </h4>
+    	{{> afQuickField name="amps" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		<h4> Copy Number / Deletions </h4>
+    	{{> afQuickField name="dels" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+	</div>
+	</div>
+	<h4> Activated or Repressed Transcription Factors </h4>
     {{> afQuickField name="tfs" type="textarea" rows=5}}
     <button type="submit" class="btn btn-primary">Run</button>
   {{/autoForm}}
