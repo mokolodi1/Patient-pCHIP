@@ -18,24 +18,28 @@
 
   <h4>Select scaffold network for patient subtype</h4>
 
-  <h2>Create</h2>
-
   {{#autoForm id="create-job" collection=Jobs}}
 	<div class="row">
-	<div class=" col-md-4 col-md-4 col-md-4 col-md-4">
-		<h4> Activated Kinases </h4>
-		<h6 style="color:#808080"> Examples: AKT1, PRKDC, CDK1... </h6>
-    	{{> afQuickField name="kinases" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		<h4> Mutated Genes </h4>
-		<h6 style="color:#808080"> Examples: TP53, APC... </h6>
-    	{{> afQuickField name="mutations" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		<h4> Copy Number / Amplifications </h4>
-		<h6 style="color:#808080"> Examples: AR, DNMT3A, MYC... </h6>
-    	{{> afQuickField name="amps" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		<h4> Copy Number / Deletions </h4>
-		<h6 style="color:#808080"> Examples: PHB, CHAF1A, NCOR1... </h6>
-    	{{> afQuickField name="dels" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-	</div>
+		<div class="col-md-3">
+			<h4> Activated Kinases </h4>
+			<h6 style="color:#808080"> Examples: AKT1, PRKDC, CDK1... </h6>
+    		{{> afQuickField name="kinases" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		</div>
+		<div class="col-md-3">
+			<h4> Mutated Genes </h4>
+			<h6 style="color:#808080"> Examples: TP53, APC, RB1... </h6>
+    		{{> afQuickField name="mutations" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		</div>
+		<div class="col-md-3">
+			<h4> Copy Number / Amplifications </h4>
+			<h6 style="color:#808080"> Examples: AR, DNMT3A, MYC... </h6>
+    		{{> afQuickField name="amps" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		</div>
+		<div class="col-md-3">
+			<h4> Copy Number / Deletions </h4>
+			<h6 style="color:#808080"> Examples: PHB, CHAF1A, NCOR1... </h6>
+    		{{> afQuickField name="dels" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
+		</div>
 	</div>
 	<h4> Activated or Repressed Transcription Factors </h4>
 	<h6 style="color:#808080"> Examples: AR, SUV39H1, DNMT1... </h6>
