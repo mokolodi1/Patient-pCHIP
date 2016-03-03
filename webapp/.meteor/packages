@@ -33,7 +33,7 @@ meteorhacks:npm
 
 npm-container
 check
-medbook:circlemap-graph
 cfs:standard-packages
 cfs:gridfs
 cfs:ui
+limax:circlemap-graph

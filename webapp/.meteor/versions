@@ -41,6 +41,7 @@ cfs:worker@0.1.4
 check@1.1.0
 coffeescript@1.0.11
 cosmos:browserify@0.9.4
+d3js:d3@3.5.8
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.2
@@ -62,10 +63,10 @@ jquery@1.11.4
 kadira:blaze-layout@2.3.0
 kadira:flow-router@2.10.1
 launch-screen@1.0.4
+limax:circlemap-graph@0.0.1
 livedata@1.0.15
 logging@1.0.8
 mdg:validation-error@0.2.0
-medbook:circlemap-graph@0.2.2
 meteor@1.1.10
 meteor-base@1.0.1
 meteorhacks:async@1.0.0
