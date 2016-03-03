@@ -17,8 +17,11 @@
   <h1>Create</h1>
 
   {{#autoForm id="create-job" collection=Jobs}}
-    {{> afQuickField name="upstreamProteins" type="textarea" rows=5}}
-    {{> afQuickField name="downstreamProteins" type="textarea" rows=5}}
+    {{> afQuickField name="kinases" type="textarea" rows=5}}
+    {{> afQuickField name="mutations" type="textarea" rows=5}}
+    {{> afQuickField name="amps" type="textarea" rows=5}}
+    {{> afQuickField name="dels" type="textarea" rows=5}}
+    {{> afQuickField name="tfs" type="textarea" rows=5}}
     <button type="submit" class="btn btn-primary">Run</button>
   {{/autoForm}}
 </template>
@@ -106,17 +109,39 @@
 
 
   <h3>Input</h3>
-  <h4>Upstream proteins</h4>
+
+  <h4>Activated Kinases</h4>
   <div class="row">
     <div class="col-md-4 col-sm-8 col-xs-12">
-      {{> listGenes upstreamProteins}}
+      {{> listGenes kinases}}
     </div>
   </div>
 
-  <h4>Downstream proteins</h4>
+  <h4>Mutations</h4>
   <div class="row">
     <div class="col-md-4 col-sm-8 col-xs-12">
-      {{> listGenes downstreamProteins}}
+      {{> listGenes mutations}}
+    </div>
+  </div>
+
+  <h4>Copy Number Amplifications</h4>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 col-xs-12">
+      {{> listGenes amps}}
+    </div>
+  </div>
+
+  <h4>Copy Number Deletions</h4>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 col-xs-12">
+      {{> listGenes dels}}
+    </div>
+  </div>
+
+  <h4>Transcription Factors</h4>
+  <div class="row">
+    <div class="col-md-4 col-sm-8 col-xs-12">
+      {{> listGenes tfs}}
     </div>
   </div>
 
