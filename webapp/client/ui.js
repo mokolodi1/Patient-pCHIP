@@ -29,6 +29,10 @@ Template.showResult.onCreated(function () {
   instance.autorun(function () {
     var job = Jobs.findOne(instance.data);
 
+    if (job && job.result && job.result.networkString) {
+      Session.set("sifString", job.result.networkString);
+    }
+
     if (job && job.status === "done") {
       instance.subscribe("blob", job.result.hallmarksBlobId);
       instance.subscribe("blob", job.result.networkBlobId);

@@ -46,10 +46,13 @@ function spawnCommand (command, args, cwd) {
   return deferred.promise;
 };
 
-function seperateByColons (array) {
-  return _.reduce(array.slice(1), function (memo, curr) {
-    return memo + ":" + curr;
-  }, array[0]);
+function separateByColons (array) {
+  if (array) {
+    return _.reduce(array.slice(1), function (memo, curr) {
+      return memo + ":" + curr;
+    }, array[0]);
+  }
+  return "";
 }
 
 Meteor.methods({
@@ -66,7 +69,7 @@ Meteor.methods({
       "dels",
       "dels.$",
       "tfs",
-      "tfs.$"
+      "tfs.$",
     ]));
 
     // insert into the jobs collection
@@ -100,15 +103,15 @@ Meteor.methods({
     // run the python code and update the job when we're done
     let workDir = ntemp.mkdirSync("pCHIP");
 
-	let upstreamProteins = _.union(formValues.kinases , formValues.mutations, formValues.amps, formValues.dels)
-    upstreamProteins = seperateByColons(upstreamProteins);
-    let downstreamProteins = seperateByColons(formValues.tfs);
+    let upstreamProteins = _.union(formValues.kinases , formValues.mutations, formValues.amps, formValues.dels)
+    upstreamProteins = separateByColons(upstreamProteins);
+    let downstreamProteins = separateByColons(formValues.tfs);
 
-	// create colon-separated variables for visualization matrix fed into Chris's tool
-	let kinases = separateByColons(formValues.kinases);
-	let mutations = separateByColons(formValues.mutations);
-	let amps = separateByColons(formValues.amps);
-	let dels = separateByColons(formValues.dels);
+    // create colon-separated variables for visualization matrix fed into Chris's tool
+    let kinases = separateByColons(formValues.kinases);
+    let mutations = separateByColons(formValues.mutations);
+    let amps = separateByColons(formValues.amps);
+    let dels = separateByColons(formValues.dels);
 
     console.log("workDir:", workDir);
     console.log("spawning...");
@@ -127,8 +130,12 @@ Meteor.methods({
         console.log("loading into blobs");
         let hallmarksBlob =
             Blobs.insert(path.join(workDir, "merged_images.png"));
+        const networkPath = path.join(workDir, "patient-network.sif");
         let patientNetworkBlob =
-            Blobs.insert(path.join(workDir, "patient-network.sif"));
+            Blobs.insert(networkPath);
+
+        // read in .sif network into a string
+        let networkString = fs.readFileSync(networkPath, {encoding: 'utf8'});
 
         Jobs.update(jobId, {
           $set: {
@@ -136,6 +143,8 @@ Meteor.methods({
             result: {
               hallmarksBlobId: hallmarksBlob._id,
               networkBlobId: patientNetworkBlob._id,
+              networkString,
+
             },
           },
         });

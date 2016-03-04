@@ -11,8 +11,26 @@ function dateCreatedAutoValue () {
 
 Jobs = new Meteor.Collection("jobs");
 Jobs.attachSchema(new SimpleSchema({
-  upstreamProteins: { type: [String] },
-  downstreamProteins: { type: [String] },
+  kinases: { type: [String], optional: true },
+  mutations: { type: [String], optional: true },
+  amps: { type: [String], optional: true },
+  dels: { type: [String], optional: true },
+  tfs: { type: [String] },
+
+  // upstreamProteins: {
+  //   type: [String],
+  //   custom: function () {
+  //
+  //   },
+  //   autoValue: function () {
+  //     let upstream = _.union(this.field("kinases").value,
+  //         this.field("mutations").value,
+  //         this.field("amps").value,
+  //         this.field("dels").value);
+  //     console.log("upstream:", upstream);
+  //     return upstream;
+  //   },
+  // },
 
   dateCreated: { type: Date, autoValue: dateCreatedAutoValue },
 
@@ -32,6 +50,7 @@ Jobs.attachSchema(new SimpleSchema({
     type: new SimpleSchema({
       hallmarksBlobId: { type: String },
       networkBlobId: { type: String },
+      networkString: { type: String },
     }),
     optional: true,
   },

@@ -19,30 +19,34 @@
   <h4>Select scaffold network for patient subtype</h4>
 
   {{#autoForm id="create-job" collection=Jobs}}
-	<div class="row">
-		<div class="col-md-3">
-			<h4> Activated Kinases </h4>
-			<h6 style="color:#808080"> Examples: AKT1, PRKDC, CDK1... </h6>
-    		{{> afQuickField name="kinases" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		</div>
-		<div class="col-md-3">
-			<h4> Mutated Genes </h4>
-			<h6 style="color:#808080"> Examples: TP53, APC, RB1... </h6>
-    		{{> afQuickField name="mutations" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		</div>
-		<div class="col-md-3">
-			<h4> Copy Number / Amplifications </h4>
-			<h6 style="color:#808080"> Examples: AR, DNMT3A, MYC... </h6>
-    		{{> afQuickField name="amps" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		</div>
-		<div class="col-md-3">
-			<h4> Copy Number / Deletions </h4>
-			<h6 style="color:#808080"> Examples: PHB, CHAF1A, NCOR1... </h6>
-    		{{> afQuickField name="dels" type="textarea" rows=5 input-col-class="col-md-4 padL-1"}}
-		</div>
-	</div>
-	<h4> Activated or Repressed Transcription Factors </h4>
-	<h6 style="color:#808080"> Examples: AR, SUV39H1, DNMT1... </h6>
+  	<div class="row">
+  		<div class="col-md-3">
+  			<h4> Activated Kinases </h4>
+  			<h6 style="color:#808080"> Examples: AKT1, PRKDC, CDK1... </h6>
+      		{{> afQuickField name="kinases" type="textarea" rows=5 input-col-class="col-md-4"}}
+  		</div>
+
+  		<div class="col-md-3">
+  			<h4> Mutated Genes </h4>
+  			<h6 style="color:#808080"> Examples: TP53, APC, RB1... </h6>
+      		{{> afQuickField name="mutations" type="textarea" rows=5 input-col-class="col-md-4"}}
+  		</div>
+
+  		<div class="col-md-3">
+  			<h4> Copy Number / Amplifications </h4>
+  			<h6 style="color:#808080"> Examples: AR, DNMT3A, MYC... </h6>
+      		{{> afQuickField name="amps" type="textarea" rows=5 input-col-class="col-md-4"}}
+  		</div>
+
+  		<div class="col-md-3">
+  			<h4> Copy Number / Deletions </h4>
+  			<h6 style="color:#808080"> Examples: PHB, CHAF1A, NCOR1... </h6>
+      		{{> afQuickField name="dels" type="textarea" rows=5 input-col-class="col-md-4"}}
+  		</div>
+  	</div>
+
+  	<h4> Activated or Repressed Transcription Factors </h4>
+  	<h6 style="color:#808080"> Examples: AR, SUV39H1, DNMT1... </h6>
     {{> afQuickField name="tfs" type="textarea" rows=5}}
     <button type="submit" class="btn btn-primary">Run</button>
   {{/autoForm}}
@@ -175,15 +179,21 @@
 </template>
 
 <template name="listGenes">
-  <ul class="list-group">
-    {{#each this}}
-      <a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{this}}"
-          data-toggle="tooltip" title="View in GeneCards"
-          class="list-group-item" target="_blank">
-        {{this}}
-      </a>
-    {{/each}}
-  </ul>
+  {{#if length this}}
+    <ul class="list-group">
+      {{#each this}}
+        <a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{this}}"
+            data-toggle="tooltip" title="View in GeneCards"
+            class="list-group-item" target="_blank">
+          {{this}}
+        </a>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>
+      None
+    </p>
+  {{/if}}
 </template>
 
 <template name="pChipResult">
