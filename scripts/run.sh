@@ -15,6 +15,10 @@ del=$9
 echo "about to start mapPatient"
 
 mkdir -p $output
+echo $kinases 
+echo $mutation 
+echo $amp
+echo $del
 
 $BASEDIR/makeDataInput.py \
 	--kinases $kinases \
