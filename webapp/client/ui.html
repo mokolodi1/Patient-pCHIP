@@ -1,5 +1,24 @@
 <template name="appBody">
   <div class="container">
+    <h1>
+      pCHIPS
+      <small>
+        <u>P</u>atient
+        <u>C</u>ancer
+        <u>H</u>allmark
+        <u>I</u>ntegrated
+        <u>P</u>hospho
+        <u>S</u>ignature
+      </small>
+
+      {{#unless isActiveRoute "create"}}
+        <a href={{pathFor "create"}} class="pull-right btn btn-primary btn-lg">
+          Run again
+          {{! TODO: have they saved the URL?}}
+        </a>
+      {{/unless}}
+    </h1>
+
     {{>Template.dynamic template=content data=jobId}}
   </div>
 </template>
@@ -14,20 +33,6 @@
 </template>
 
 <template name="create">
-  <h1>
-    pCHIPS
-    <small>
-      <u>P</u>atient
-      <u>C</u>ancer
-      <u>H</u>allmark
-      <u>I</u>ntegrated
-      <u>P</u>hospho
-      <u>S</u>ignature
-    </small>
-  </h1>
-
-
-
   {{#autoForm id="create-job" collection=Jobs}}
     <h4>Select scaffold network for patient subtype</h4>
     <p>
@@ -68,13 +73,6 @@
 </template>
 
 <template name="showResult">
-  <h1>
-    Result
-    <a href={{pathFor "create"}} class="pull-right btn btn-default btn-lg">
-      Create another
-      {{! TODO: have they saved the URL?}}
-    </a>
-  </h1>
   {{#if Template.subscriptionsReady}}
     {{#with getJob}}
       {{#if compare status "done"}}
