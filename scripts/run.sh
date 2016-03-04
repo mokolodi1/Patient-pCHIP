@@ -7,25 +7,20 @@ downstream_nodes=$2
 output=$3
 scaffold=$4
 gene_universe=$5
-kinases=$6
-mutation=$7
-amp=$8
-del=$9
+kinases="$6:None"
+mutation="$7:None"
+amp="$8:None"
+del="$9:None"
 
 echo "about to start mapPatient"
 
 mkdir -p $output
-echo $kinases 
-echo $mutation 
-echo $amp
-echo $del
-
 $BASEDIR/makeDataInput.py \
+	--tfs $downstream_nodes \
 	--kinases $kinases \
 	--mutations $mutation \
 	--amps $amp \
 	--dels $del \
-	--tfs $downstream_nodes \
 	$scaffold > $output/network.data.txt
 
 # map patient data to get a network from the scaffold
