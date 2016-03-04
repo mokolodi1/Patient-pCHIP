@@ -1,0 +1,21 @@
+patient-pchip:
+  container_name: "patient-pchip"
+  build: .
+  command: node /build/bundle/main.js
+  volumes:
+   - /Users/mokolodi1/work/evan/Patient-pCHIP/:/app-dev
+  environment:
+    RELEASE: 1.2.1
+    # ROOT_URL: ${ROOT_URL}/CollaborationManager
+    MONGO_URL: mongodb://mongo:27017/MedBook
+    METEOR_SETTINGS: /app-dev/config/docker/settings.json
+
+##TODO should probably pin down the version of Mongo
+mongo:
+  container_name: "mongo"
+  image: mongo:2.6.11
+
+  # # uncomment when you want to talk directly to moongo
+  # from outside a container
+  # ports:
+  #   - "127.0.0.1:27017:27017"
