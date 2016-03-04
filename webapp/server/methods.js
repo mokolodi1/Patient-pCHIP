@@ -118,6 +118,10 @@ Meteor.methods({
       workDir,
       Meteor.settings.scaffold,
       Meteor.settings.gene_universe,
+      kinases,
+      mutations,
+      amps,
+      dels
     ], workDir)
       .then(Meteor.bindEnvironment(function () {
         console.log("loading into blobs");
