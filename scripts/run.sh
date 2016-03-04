@@ -21,7 +21,7 @@ $BASEDIR/makeDataInput.py \
 	--mutations $mutation \
 	--amps $amp \
 	--dels $del \
-	--tfs $downstream_nodes 
+	--tfs $downstream_nodes \
 	$scaffold > $output/network.data.txt
 
 # map patient data to get a network from the scaffold

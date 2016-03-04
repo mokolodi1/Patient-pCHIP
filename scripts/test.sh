@@ -9,4 +9,4 @@ output=TEST_OUTPUT
 scaffold=$BASEDIR/drake_paull_scaffold.txt
 gene_universe=$BASEDIR/GSEA_SETS/multinet.genes.lst
 
-$BASEDIR/run.sh $upstream_nodes $downstream_nodes $output $scaffold $gene_universe
+$BASEDIR/run.sh $upstream_nodes $downstream_nodes $output $scaffold $gene_universe --kinases AKT1 --mutations TP53:APC --amps AR $scaffold 
