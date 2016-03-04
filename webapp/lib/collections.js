@@ -17,21 +17,6 @@ Jobs.attachSchema(new SimpleSchema({
   dels: { type: [String], optional: true },
   tfs: { type: [String] },
 
-  // upstreamProteins: {
-  //   type: [String],
-  //   custom: function () {
-  //
-  //   },
-  //   autoValue: function () {
-  //     let upstream = _.union(this.field("kinases").value,
-  //         this.field("mutations").value,
-  //         this.field("amps").value,
-  //         this.field("dels").value);
-  //     console.log("upstream:", upstream);
-  //     return upstream;
-  //   },
-  // },
-
   dateCreated: { type: Date, autoValue: dateCreatedAutoValue },
 
   status: {
@@ -50,7 +35,8 @@ Jobs.attachSchema(new SimpleSchema({
     type: new SimpleSchema({
       hallmarksBlobId: { type: String },
       networkBlobId: { type: String },
-      networkString: { type: String },
+      // the file could be blank ==> no network
+      networkString: { type: String, optional: true },
       nodeData: { type: String },
     }),
     optional: true,

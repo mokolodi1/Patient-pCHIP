@@ -46,11 +46,21 @@ function spawnCommand (command, args, cwd) {
   return deferred.promise;
 };
 
-function separateByColons (array) {
-  if (array) {
-    return _.reduce(array.slice(1), function (memo, curr) {
-      return memo + ":" + curr;
-    }, array[0]);
+function wrangleGenes (arrayOfLines) {
+  if (arrayOfLines) {
+    // "".split("sdf") ==> [""]
+    const perhapsEmptyString = arrayOfLines.join("\n").split(/[\s,;|]+/);
+    if (perhapsEmptyString[0] === "") {
+      return [];
+    }
+    return perhapsEmptyString;
+  }
+  return [];
+}
+
+function joinIfNotBlank (arrayOfGenes) {
+  if (arrayOfGenes) {
+    return arrayOfGenes.join(":");
   }
   return "";
 }
@@ -100,24 +110,38 @@ Meteor.methods({
       });
     }
 
+    // first wrangle the inputs
+    let kinases = wrangleGenes(formValues.kinases);
+    let mutations = wrangleGenes(formValues.mutations);
+    let amps = wrangleGenes(formValues.amps);
+    let dels = wrangleGenes(formValues.dels);
+    let tfs = wrangleGenes(formValues.tfs);
+
+    // then set them for the job
+    Jobs.update(jobId, {
+      $set: { kinases, mutations, amps, dels, tfs }
+    });
+
+    // then join with colons
+    kinases = joinIfNotBlank(kinases);
+    mutations = joinIfNotBlank(mutations);
+    amps = joinIfNotBlank(amps);
+    dels = joinIfNotBlank(dels);
+    tfs = joinIfNotBlank(tfs);
+
+    let notBlank = _.filter([kinases, mutations, amps, dels], (value) => {
+      return !!value; // not falsey
+    });
+    let upstreamProteins = notBlank.join(":");
+
     // run the python code and update the job when we're done
     let workDir = ntemp.mkdirSync("pCHIP");
-
-    let upstreamProteins = _.union(formValues.kinases , formValues.mutations, formValues.amps, formValues.dels)
-    upstreamProteins = separateByColons(upstreamProteins);
-    let downstreamProteins = separateByColons(formValues.tfs);
-
-    // create colon-separated variables for visualization matrix fed into Chris's tool
-    let kinases = separateByColons(formValues.kinases);
-    let mutations = separateByColons(formValues.mutations);
-    let amps = separateByColons(formValues.amps);
-    let dels = separateByColons(formValues.dels);
-
     console.log("workDir:", workDir);
+
     console.log("spawning...");
     spawnCommand(Meteor.settings.mapPatient, [
       upstreamProteins,
-      downstreamProteins,
+      tfs,
       workDir,
       Meteor.settings.scaffold,
       Meteor.settings.gene_universe,
