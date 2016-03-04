@@ -176,12 +176,20 @@
 
   <h3>
     Network
-    <a href={{networkBlobUrl}} class="btn btn-primary" target="_blank">
-      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-      Download .sif
-    </a>
+    {{#if result.networkString}}
+      <a href={{networkBlobUrl}} class="btn btn-primary" target="_blank">
+        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        Download .sif
+      </a>
+    {{/if}}
   </h3>
-  {{> circleMapGraphTemplate this}}
+  {{#if result.networkString}}
+    {{> circleMapGraphTemplate this}}
+  {{else}}
+    <p>
+      No network result.
+    </p>
+  {{/if}}
 </template>
 
 <template name="listGenes">

@@ -24,11 +24,11 @@ Template.circleMapGraphTemplate.rendered = function() {
 
     instance.autorun(function(first) {
         // get graph data (sif in a string)
-        var sifString = Session.get("sifString") || "A	-PPI>	B\nC	-PPI>	D\nA	-PPI>	E\nA	-kinase_regulator>	F";
+        var sifString = Session.get("sifString");// || "A	-PPI>	B\nC	-PPI>	D\nA	-PPI>	E\nA	-kinase_regulator>	F";
         console.log("sifString:", sifString);
 
         // get sample data (TSV in a string, with columns: Gene, Kinases, Mutations, Amps, Dels, TFs)
-        var sampleData = Session.get("hallmarksSampleData") || "Gene	Kinases	Mutations	Amps	Dels	TFs\nA	1	1	0	0	0	0\nB	0	1	0	0	0	0\nC	0	1	0	0	0	0\nD	0	1	0	0	0	0\nE	0	1	0	0	0	0\nF	0	0	0	0	0	0";
+        var sampleData = Session.get("hallmarksSampleData");// || "Gene	Kinases	Mutations	Amps	Dels	TFs\nA	1	1	0	0	0	0\nB	0	1	0	0	0	0\nC	0	1	0	0	0	0\nD	0	1	0	0	0	0\nE	0	1	0	0	0	0\nF	0	0	0	0	0	0";
 
         // get node center scores
         var centerScores = {};
