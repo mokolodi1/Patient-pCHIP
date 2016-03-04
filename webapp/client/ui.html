@@ -14,11 +14,26 @@
 </template>
 
 <template name="create">
-  <h1>patient Cancer Hallmark Integrated Phospho Signature (pCHIPS)</h1>
+  <h1>
+    pCHIPS
+    <small>
+      <u>P</u>atient
+      <u>C</u>ancer
+      <u>H</u>allmark
+      <u>I</u>ntegrated
+      <u>P</u>hospho
+      <u>S</u>ignature
+    </small>
+  </h1>
 
-  <h4>Select scaffold network for patient subtype</h4>
+
 
   {{#autoForm id="create-job" collection=Jobs}}
+    <h4>Select scaffold network for patient subtype</h4>
+    <p>
+      scaffold select here
+    </p>
+
   	<div class="row">
   		<div class="col-md-3">
   			<h4> Activated Kinases </h4>
