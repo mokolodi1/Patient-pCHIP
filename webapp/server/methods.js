@@ -62,7 +62,7 @@ Meteor.methods({
       "mutations",
       "mutations.$",
       "amps",
-      "amps.$"
+      "amps.$",
       "dels",
       "dels.$",
       "tfs",
