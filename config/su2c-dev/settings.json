@@ -1,0 +1,6 @@
+{
+  "networkDataFile": "/data/home/dtflemin/Patient-pCHIP/scripts/makeDataInput.py",
+  "mapPatient": "/data/home/dtflemin/Patient-pCHIP/scripts/run.sh",
+  "scaffold": "/data/home/dtflemin/Patient-pCHIP/scripts/drake_paull_scaffold.txt",
+  "gene_universe": "/data/home/dtflemin/Patient-pCHIP/scripts/multinet.genes.lst"
+}
