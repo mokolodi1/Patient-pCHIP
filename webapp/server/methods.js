@@ -136,6 +136,8 @@ Meteor.methods({
 
         // read in .sif network into a string
         let networkString = fs.readFileSync(networkPath, {encoding: 'utf8'});
+        let nodeDataPath = path.join(workDir, "network.data.txt");
+        let nodeData = fs.readFileSync(nodeDataPath, {encoding: 'utf8'});
 
         Jobs.update(jobId, {
           $set: {
@@ -144,7 +146,7 @@ Meteor.methods({
               hallmarksBlobId: hallmarksBlob._id,
               networkBlobId: patientNetworkBlob._id,
               networkString,
-
+              nodeData,
             },
           },
         });

@@ -51,6 +51,7 @@ Jobs.attachSchema(new SimpleSchema({
       hallmarksBlobId: { type: String },
       networkBlobId: { type: String },
       networkString: { type: String },
+      nodeData: { type: String },
     }),
     optional: true,
   },

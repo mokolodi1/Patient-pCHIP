@@ -33,6 +33,10 @@ Template.showResult.onCreated(function () {
       Session.set("sifString", job.result.networkString);
     }
 
+    if (job && job.result && job.result.nodeData) {
+      Session.set("hallmarksSampleData", job.result.nodeData);
+    }
+
     if (job && job.status === "done") {
       instance.subscribe("blob", job.result.hallmarksBlobId);
       instance.subscribe("blob", job.result.networkBlobId);
