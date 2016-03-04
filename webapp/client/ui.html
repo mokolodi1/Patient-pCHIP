@@ -174,7 +174,13 @@
   <h3>pCHIP</h3>
   {{> pChipResult this}}
 
-  <h3>Network</h3>
+  <h3>
+    Network
+    <a href={{networkBlobUrl}} class="btn btn-primary" target="_blank">
+      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+      Download .sif
+    </a>
+  </h3>
   {{> circleMapGraphTemplate this}}
 </template>
 

@@ -50,6 +50,19 @@ Template.showResult.helpers({
   },
 });
 
+// Template.jobDoneResult
+
+Template.jobDoneResult.helpers({
+  networkBlobUrl: function () {
+    if (this && this.result && this.result.networkBlobId) {
+      const blob = Blobs.findOne(this.result.networkBlobId);
+      if (blob) {
+        return blob.url();
+      }
+    }
+  },
+});
+
 // Template.listGenes
 
 Template.listGenes.onRendered(function () {
