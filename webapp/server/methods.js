@@ -57,10 +57,16 @@ Meteor.methods({
     // TODO: figure out why the .pick method isn't working
     // ;
     check(formValues, Jobs.simpleSchema().pick([
-      "upstreamProteins",
-      "upstreamProteins.$",
-      "downstreamProteins",
-      "downstreamProteins.$"
+      "kinases",
+      "kinases.$",
+      "mutations",
+      "mutations.$",
+      "amps",
+      "amps.$"
+      "dels",
+      "dels.$",
+      "tfs",
+      "tfs.$"
     ]));
 
     // insert into the jobs collection
@@ -94,8 +100,15 @@ Meteor.methods({
     // run the python code and update the job when we're done
     let workDir = ntemp.mkdirSync("pCHIP");
 
-    let upstreamProteins = seperateByColons(formValues.upstreamProteins);
-    let downstreamProteins = seperateByColons(formValues.downstreamProteins);
+	let upstreamProteins = _.union(formValues.kinases , formValues.mutations, formValues.amps, formValues.dels)
+    upstreamProteins = seperateByColons(upstreamProteins);
+    let downstreamProteins = seperateByColons(formValues.tfs);
+
+	// create colon-separated variables for visualization matrix fed into Chris's tool
+	let kinases = separateByColons(formValues.kinases);
+	let mutations = separateByColons(formValues.mutations);
+	let amps = separateByColons(formValues.amps);
+	let dels = separateByColons(formValues.dels);
 
     console.log("workDir:", workDir);
     console.log("spawning...");
