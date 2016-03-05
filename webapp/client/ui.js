@@ -42,11 +42,23 @@ Please contact Teo Fleming at mokolodi1@gmail.com.`);
 
 Template.create.helpers({
   Jobs: Jobs,
+  getSamples: function () {
+    return Object.keys(patientEventsFromPaper);
+  },
 });
 
 Template.create.events({
   "input .upstreamGeneInput": function (event, instance) {
     Session.set("upstreamGenesError", false);
+  },
+  "click .load-sample-data": function (event, instance) {
+    const { sampleName } = event.target.dataset;
+
+    const data = patientEventsFromPaper[sampleName];
+
+    _.each(data, (value, key) => {
+      instance.$(`textarea[name=${key}]`).val(value);
+    });
   },
 });
 
@@ -96,6 +108,12 @@ Template.jobDoneResult.helpers({
         return blob.url();
       }
     }
+  },
+  makeHumanReadable: function (scaffoldKey) {
+    return Jobs.simpleSchema().schema()
+        .scaffoldNetwork
+        .autoform
+        .options[scaffoldKey];
   },
 });
 

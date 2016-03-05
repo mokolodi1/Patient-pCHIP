@@ -24,8 +24,13 @@ Jobs.attachSchema(new SimpleSchema({
     type: String,
     label: "Select scaffold network for patient subtype",
     allowedValues: [
-      "Drake Paull et al 2016",
+      "drake_paull",
     ],
+    autoform: {
+      options: {
+        drake_paull: "Drake Paull et al 2016",
+      }
+    },
   },
 
   dateCreated: { type: Date, autoValue: dateCreatedAutoValue },

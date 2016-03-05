@@ -40,33 +40,33 @@
   {{#autoForm id="create-job" collection=Jobs}}
     <div class="row">
       <div class="col-md-6 col-sm-8 col-xs-12">
-        {{> afQuickField name="scaffoldNetwork" options="allowed"
+        {{> afQuickField name="scaffoldNetwork"
           label-class="h4" input-col-class="col-md-4 col-sm-6 col-xs-12"
-          value="Drake Paull et al 2016"}}
+          value="drake_paull"}}
       </div>
     </div>
 
     <div class="{{#if getSession "upstreamGenesError"}}has-error{{/if}}">
       <div class="row">
-    		<div class="col-md-3">
+    		<div class="col-sm-3">
         	{{> afQuickField name="kinases" type="textarea" rows=5
               label-class="h4" placeholder="Examples: AKT1, PRKDC, CDK1..."
               class="upstreamGeneInput"}}
     		</div>
 
-    		<div class="col-md-3">
+    		<div class="col-sm-3">
         	{{> afQuickField name="mutations" type="textarea" rows=5
               label-class="h4" placeholder="Examples: TP53, APC, RB1..."
               class="upstreamGeneInput"}}
     		</div>
 
-    		<div class="col-md-3">
+    		<div class="col-sm-3">
       		{{> afQuickField name="amps" type="textarea" rows=5
               label-class="h4" placeholder="Examples: AR, DNMT3A, MYC..."
               class="upstreamGeneInput"}}
     		</div>
 
-    		<div class="col-md-3">
+    		<div class="col-sm-3">
       		{{> afQuickField name="dels" type="textarea" rows=5
               label-class="h4" placeholder="Examples: PHB, CHAF1A, NCOR1..."
               class="upstreamGeneInput"}}
@@ -88,7 +88,26 @@
     {{> afQuickField name="tfs" type="textarea" rows=5 label-class="h4"
         placeholder="Examples: AR, SUV39H1, DNMT1..."}}
 
+    {{! submit buttons and such}}
     <button type="submit" class="btn btn-primary btn-lg">Run</button>
+    <div class="btn-group dropup">
+      <button class="btn btn-info dropdown-toggle" type="button"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Load data from <i>Drake Paull et al 2016</i>
+        <span class="caret"></span>
+      </button>
+
+      <ul class="dropdown-menu">
+        {{#each getSamples}}
+          <li>
+            <a data-sample-name={{this}} href="" class="load-sample-data">
+              {{this}}
+            </a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+    <button type="reset" class="btn btn-warning">Clear inputs</button>
   {{/autoForm}}
 </template>
 
@@ -168,7 +187,7 @@
 
   <h2>Input</h2>
 
-  <h4>Scaffold network: <i>{{scaffoldNetwork}}</i></h4>
+  <h4>Scaffold network: <i>{{makeHumanReadable scaffoldNetwork}}</i></h4>
 
   <div class="row">
     <div class="col-md-3">

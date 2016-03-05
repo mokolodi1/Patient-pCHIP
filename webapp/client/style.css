@@ -1,3 +1,9 @@
 .inline {
-  display: inline;
+  display: inline-table;
+  margin-bottom: 7px;
+  margin-top: 0px;
+}
+
+h4 {
+  margin-bottom: 4px;
 }
