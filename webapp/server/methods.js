@@ -92,21 +92,25 @@ Meteor.methods({
     _.each(formValues, (value, key) => {
       if (formArrayKeys.indexOf(key) !== -1) {
         formValues[key] = wrangleGenes(value);
-      } else { console.log("didn't wrangle", key); }
+      }
     });
 
-    // make sure there's an upstream field that's not blank
-    let notBlankUpstreamGenes = _.filter(formValues, (value, key) => {
+    // collect all upstream genes into one array
+    const notBlankUpstreamGenes = _.filter(formValues, (value, key) => {
       // reject if not an upstream gene field
-      if (!formArrayKeys.indexOf(key) !== -1 && key !== "tfs") {
+      if (formArrayKeys.indexOf(key) === -1 || key === "tfs") {
         return false;
       }
 
       return !!value; // not falsey
     });
+    console.log("notBlankUpstreamGenes:", notBlankUpstreamGenes);
+    const upstreamGenes = _.flatten(notBlankUpstreamGenes).join(":");
+    console.log("upstreamGenes:", upstreamGenes);
 
     // if no upstream proteins, throw error
-    if (!notBlankUpstreamGenes) {
+    if (upstreamGenes.length === 0) {
+      console.log("No upstream proteins... throwing error");
       throw new Meteor.Error("noUpstreamProteins");
     }
 
@@ -148,7 +152,7 @@ Meteor.methods({
 
     console.log("spawning...");
     spawnCommand(Meteor.settings.mapPatient, [
-      notBlankUpstreamGenes.join(":"),
+      upstreamGenes,
       joinIfNotBlank(formValues.tfs),
       workDir,
       Meteor.settings.scaffold,
