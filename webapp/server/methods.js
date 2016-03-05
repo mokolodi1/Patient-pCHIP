@@ -12,7 +12,7 @@ Meteor.startup(function () {
   }, {
     $set: {
       status: "error",
-      error_description: "Server restarted while running job",
+      errorDescription: "Server restarted while running job",
     }
   });
 });
@@ -47,6 +47,9 @@ function spawnCommand (command, args, cwd) {
 };
 
 function wrangleGenes (arrayOfLines) {
+  // NOTE: because we're using textareas on the client, the arrayOfLines
+  // has been broken by line and
+
   if (arrayOfLines) {
     // "".split("sdf") ==> [""]
     const perhapsEmptyString = arrayOfLines.join("\n").split(/[\s,;|]+/);
@@ -67,8 +70,8 @@ function joinIfNotBlank (arrayOfGenes) {
 
 Meteor.methods({
   runJob: function (formValues) {
+    console.log("\nrunJob");
     // TODO: figure out why the .pick method isn't working
-    // ;
     check(formValues, Jobs.simpleSchema().pick([
       "kinases",
       "kinases.$",
@@ -80,10 +83,37 @@ Meteor.methods({
       "dels.$",
       "tfs",
       "tfs.$",
+      "scaffoldNetwork",
     ]));
 
-    // insert into the jobs collection
-    var jobId = Jobs.insert(formValues);
+    const formArrayKeys = ["kinases", "mutations", "amps", "dels", "tfs"];
+
+    // wrangle each of the genes into an array
+    _.each(formValues, (value, key) => {
+      if (formArrayKeys.indexOf(key) !== -1) {
+        formValues[key] = wrangleGenes(value);
+      } else { console.log("didn't wrangle", key); }
+    });
+
+    // make sure there's an upstream field that's not blank
+    let notBlankUpstreamGenes = _.filter(formValues, (value, key) => {
+      // reject if not an upstream gene field
+      if (!formArrayKeys.indexOf(key) !== -1 && key !== "tfs") {
+        return false;
+      }
+
+      return !!value; // not falsey
+    });
+
+    // if no upstream proteins, throw error
+    if (!notBlankUpstreamGenes) {
+      throw new Meteor.Error("noUpstreamProteins");
+    }
+
+    // insert into the jobs collection before joining with colons
+    const jobId = Jobs.insert(formValues);
+
+
 
     // If for some reason we run into some problem while running the job,
     // update the job with a nice error message.
@@ -97,7 +127,7 @@ Meteor.methods({
       Jobs.rawCollection().update({_id: jobId}, {
         $set: {
           status: "error",
-          error_description: "Internal error",
+          errorDescription: "Internal error",
         }
       }, function (error, result) {
         if (error) {
@@ -110,29 +140,7 @@ Meteor.methods({
       });
     }
 
-    // first wrangle the inputs
-    let kinases = wrangleGenes(formValues.kinases);
-    let mutations = wrangleGenes(formValues.mutations);
-    let amps = wrangleGenes(formValues.amps);
-    let dels = wrangleGenes(formValues.dels);
-    let tfs = wrangleGenes(formValues.tfs);
 
-    // then set them for the job
-    Jobs.update(jobId, {
-      $set: { kinases, mutations, amps, dels, tfs }
-    });
-
-    // then join with colons
-    kinases = joinIfNotBlank(kinases);
-    mutations = joinIfNotBlank(mutations);
-    amps = joinIfNotBlank(amps);
-    dels = joinIfNotBlank(dels);
-    tfs = joinIfNotBlank(tfs);
-
-    let notBlank = _.filter([kinases, mutations, amps, dels], (value) => {
-      return !!value; // not falsey
-    });
-    let upstreamProteins = notBlank.join(":");
 
     // run the python code and update the job when we're done
     let workDir = ntemp.mkdirSync("pCHIP");
@@ -140,15 +148,15 @@ Meteor.methods({
 
     console.log("spawning...");
     spawnCommand(Meteor.settings.mapPatient, [
-      upstreamProteins,
-      tfs,
+      notBlankUpstreamGenes.join(":"),
+      joinIfNotBlank(formValues.tfs),
       workDir,
       Meteor.settings.scaffold,
       Meteor.settings.gene_universe,
-      kinases,
-      mutations,
-      amps,
-      dels
+      joinIfNotBlank(formValues.kinases),
+      joinIfNotBlank(formValues.mutations),
+      joinIfNotBlank(formValues.amps),
+      joinIfNotBlank(formValues.dels),
     ], workDir)
       .then(Meteor.bindEnvironment(function () {
         console.log("loading into blobs");
@@ -178,6 +186,8 @@ Meteor.methods({
         console.log("done");
       }, internalError))
       .catch(internalError);
+
+
 
     // return the job _id so the client can go to the right URL
     return jobId;

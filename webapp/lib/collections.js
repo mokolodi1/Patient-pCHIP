@@ -11,11 +11,22 @@ function dateCreatedAutoValue () {
 
 Jobs = new Meteor.Collection("jobs");
 Jobs.attachSchema(new SimpleSchema({
-  kinases: { type: [String], optional: true },
-  mutations: { type: [String], optional: true },
-  amps: { type: [String], optional: true },
-  dels: { type: [String], optional: true },
-  tfs: { type: [String] },
+  kinases: { type: [String], label: "Activated Kinases", optional: true },
+  mutations: { type: [String], label: "Mutated Genes", optional: true },
+  amps: { type: [String], label: "Copy Number Amplifications", optional: true },
+  dels: { type: [String], label: "Copy Number Deletions", optional: true },
+  tfs: {
+    type: [String],
+    label: "Activated or Repressed Transcription Factors"
+  },
+
+  scaffoldNetwork: {
+    type: String,
+    label: "Select scaffold network for patient subtype",
+    allowedValues: [
+      "Drake Paull et al 2016",
+    ],
+  },
 
   dateCreated: { type: Date, autoValue: dateCreatedAutoValue },
 
@@ -29,7 +40,7 @@ Jobs.attachSchema(new SimpleSchema({
     ],
   },
   // set to "Server restarted if we restart while it's running"
-  error_description: { type: String, optional: true },
+  errorDescription: { type: String, optional: true },
 
   result: {
     type: new SimpleSchema({

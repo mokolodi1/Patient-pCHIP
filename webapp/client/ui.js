@@ -1,22 +1,56 @@
+// Template.create
+
+Session.setDefault("upstreamGenesError", false);
+
 // add a hook for the create job form
 AutoForm.hooks({
   "create-job": {
     onSubmit: function (insertDoc, updateDoc, currentDoc) {
-      Meteor.call("runJob", insertDoc, (error, jobId) => {
-        FlowRouter.go("showResult", { jobId });
+      // make sure that there are at least some upstream proteins
 
-        // done with the submission of the form
-        this.done();
+      const hasUpstream = _.some([
+        insertDoc.kinases,
+        insertDoc.mutations,
+        insertDoc.amps,
+        insertDoc.dels,
+      ], function (value) {
+        return !!value;
       });
 
-      return false;
+      if (!hasUpstream) {
+        Session.set("upstreamGenesError", true);
+        this.done(new Error("noUpstreamProteins"));
+      } else {
+        Session.set("upstreamGenesError", false);
+        Meteor.call("runJob", insertDoc, (error, jobId) => {
+          if (error) {
+            alert(`There was an internal error creating your job.
+Please contact Teo Fleming at mokolodi1@gmail.com.`);
+          } else {
+            FlowRouter.go("showResult", { jobId });
+          }
+
+          // done with the submission of the form
+          this.done();
+        });
+      }
+
+      return false; // equivalent to event.preventDefault()
     }
-  }
+  },
 });
 
 Template.create.helpers({
   Jobs: Jobs,
 });
+
+Template.create.events({
+  "input .upstreamGeneInput": function (event, instance) {
+    Session.set("upstreamGenesError", false);
+  },
+});
+
+
 
 // Template.showResult
 
@@ -50,6 +84,8 @@ Template.showResult.helpers({
   },
 });
 
+
+
 // Template.jobDoneResult
 
 Template.jobDoneResult.helpers({
@@ -63,13 +99,17 @@ Template.jobDoneResult.helpers({
   },
 });
 
+
+
 // Template.listGenes
 
-Template.listGenes.onRendered(function () {
-  let instance = this;
+// Template.listGenes.onRendered(function () {
+//   let instance = this;
+//
+//   instance.$('[data-toggle="tooltip"]').tooltip();
+// });
 
-  instance.$('[data-toggle="tooltip"]').tooltip();
-});
+
 
 // Template.rememberThisUrl
 
@@ -79,12 +119,6 @@ Template.rememberThisUrl.onRendered(function () {
   let instance = this;
 
   instance.$('[data-toggle="tooltip"]').tooltip();
-});
-
-Template.rememberThisUrl.helpers({
-  remindToSaveUrl: function () {
-    return Session.get("remindToSaveUrl");
-  },
 });
 
 Template.rememberThisUrl.events({

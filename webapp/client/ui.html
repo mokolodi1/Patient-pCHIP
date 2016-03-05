@@ -14,7 +14,6 @@
       {{#unless isActiveRoute "create"}}
         <a href={{pathFor "create"}} class="pull-right btn btn-primary btn-lg">
           Run again
-          {{! TODO: have they saved the URL?}}
         </a>
       {{/unless}}
     </h1>
@@ -29,46 +28,67 @@
     <p>
       I wonder how you ended up here...
     </p>
+    <p>
+      <a href={{pathFor "create"}} class="btn btn-primary btn-lg">
+        Go back home
+      </a>
+    </p>
   </div>
 </template>
 
 <template name="create">
   {{#autoForm id="create-job" collection=Jobs}}
-    <h4>Select scaffold network for patient subtype</h4>
-    <p>
-      scaffold select here
-    </p>
+    <div class="row">
+      <div class="col-md-6 col-sm-8 col-xs-12">
+        {{> afQuickField name="scaffoldNetwork" options="allowed"
+          label-class="h4" input-col-class="col-md-4 col-sm-6 col-xs-12"
+          value="Drake Paull et al 2016"}}
+      </div>
+    </div>
 
-  	<div class="row">
-  		<div class="col-md-3">
-  			<h4> Activated Kinases </h4>
-  			<h6 style="color:#808080"> Examples: AKT1, PRKDC, CDK1... </h6>
-      		{{> afQuickField name="kinases" type="textarea" rows=5 input-col-class="col-md-4"}}
-  		</div>
+    <div class="{{#if getSession "upstreamGenesError"}}has-error{{/if}}">
+      <div class="row">
+    		<div class="col-md-3">
+        	{{> afQuickField name="kinases" type="textarea" rows=5
+              label-class="h4" placeholder="Examples: AKT1, PRKDC, CDK1..."
+              class="upstreamGeneInput"}}
+    		</div>
 
-  		<div class="col-md-3">
-  			<h4> Mutated Genes </h4>
-  			<h6 style="color:#808080"> Examples: TP53, APC, RB1... </h6>
-      		{{> afQuickField name="mutations" type="textarea" rows=5 input-col-class="col-md-4"}}
-  		</div>
+    		<div class="col-md-3">
+        	{{> afQuickField name="mutations" type="textarea" rows=5
+              label-class="h4" placeholder="Examples: TP53, APC, RB1..."
+              class="upstreamGeneInput"}}
+    		</div>
 
-  		<div class="col-md-3">
-  			<h4> Copy Number / Amplifications </h4>
-  			<h6 style="color:#808080"> Examples: AR, DNMT3A, MYC... </h6>
-      		{{> afQuickField name="amps" type="textarea" rows=5 input-col-class="col-md-4"}}
-  		</div>
+    		<div class="col-md-3">
+      		{{> afQuickField name="amps" type="textarea" rows=5
+              label-class="h4" placeholder="Examples: AR, DNMT3A, MYC..."
+              class="upstreamGeneInput"}}
+    		</div>
 
-  		<div class="col-md-3">
-  			<h4> Copy Number / Deletions </h4>
-  			<h6 style="color:#808080"> Examples: PHB, CHAF1A, NCOR1... </h6>
-      		{{> afQuickField name="dels" type="textarea" rows=5 input-col-class="col-md-4"}}
-  		</div>
-  	</div>
+    		<div class="col-md-3">
+      		{{> afQuickField name="dels" type="textarea" rows=5
+              label-class="h4" placeholder="Examples: PHB, CHAF1A, NCOR1..."
+              class="upstreamGeneInput"}}
+    		</div>
+    	</div>
 
-  	<h4> Activated or Repressed Transcription Factors </h4>
-  	<h6 style="color:#808080"> Examples: AR, SUV39H1, DNMT1... </h6>
-    {{> afQuickField name="tfs" type="textarea" rows=5}}
-    <button type="submit" class="btn btn-primary">Run</button>
+      {{#if getSession "upstreamGenesError"}}
+        <div class="row">
+          {{! error text for if they don't put any upstream genes}}
+          <span class="help-block col-xs-12" style="margin-top: -10px;">
+            At least one upstream gene is required.
+            Activated kinases, mutated genes, and copy number alterations are all
+            upstream genes.
+          </span>
+        </div>
+      {{/if}}
+    </div>
+
+    {{> afQuickField name="tfs" type="textarea" rows=5 label-class="h4"
+        placeholder="Examples: AR, SUV39H1, DNMT1..."}}
+
+    <button type="submit" class="btn btn-primary btn-lg">Run</button>
   {{/autoForm}}
 </template>
 
@@ -95,7 +115,7 @@
               let us know by clicking the button below.
             </p>
             <p>
-              Error description: <code>{{error_description}}</code>
+              Error description: <code>{{errorDescription}}</code>
             </p>
             <p>
               The id of this job is <code>{{_id}}</code>. Please mention this
@@ -146,48 +166,43 @@
 <template name="jobDoneResult">
   {{> rememberThisUrl}}
 
+  <h2>Input</h2>
 
-  <h3>Input</h3>
+  <h4>Scaffold network: <i>{{scaffoldNetwork}}</i></h4>
 
-  <h4>Activated Kinases</h4>
   <div class="row">
-    <div class="col-md-4 col-sm-8 col-xs-12">
+    <div class="col-md-3">
+      <h4>Activated Kinases</h4>
       {{> listGenes kinases}}
     </div>
-  </div>
 
-  <h4>Mutations</h4>
-  <div class="row">
-    <div class="col-md-4 col-sm-8 col-xs-12">
+    <div class="col-md-3">
+      <h4>Mutations</h4>
       {{> listGenes mutations}}
     </div>
-  </div>
 
-  <h4>Copy Number Amplifications</h4>
-  <div class="row">
-    <div class="col-md-4 col-sm-8 col-xs-12">
+    <div class="col-md-3">
+      <h4>Copy Number Amplifications</h4>
       {{> listGenes amps}}
     </div>
-  </div>
 
-  <h4>Copy Number Deletions</h4>
-  <div class="row">
-    <div class="col-md-4 col-sm-8 col-xs-12">
+    <div class="col-md-3">
+      <h4>Copy Number Deletions</h4>
       {{> listGenes dels}}
     </div>
   </div>
 
-  <h4>Transcription Factors</h4>
   <div class="row">
-    <div class="col-md-4 col-sm-8 col-xs-12">
+    <div class="col-xs-12">
+      <h4>Transcription Factors</h4>
       {{> listGenes tfs}}
     </div>
   </div>
 
-  <h3>pCHIP</h3>
+  <h2>pCHIP</h2>
   {{> pChipResult this}}
 
-  <h3>
+  <h2>
     Network
     {{#if result.networkString}}
       <a href={{networkBlobUrl}} class="btn btn-primary" target="_blank">
@@ -195,7 +210,7 @@
         Download .sif
       </a>
     {{/if}}
-  </h3>
+  </h2>
   {{#if result.networkString}}
     {{> circleMapGraphTemplate this}}
   {{else}}
@@ -207,7 +222,7 @@
 
 <template name="listGenes">
   {{#if length this}}
-    <ul class="list-group">
+    <!-- <ul class="list-group">
       {{#each this}}
         <a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{this}}"
             data-toggle="tooltip" title="View in GeneCards"
@@ -215,7 +230,13 @@
           {{this}}
         </a>
       {{/each}}
-    </ul>
+    </ul> -->
+
+    {{#each this}}
+      <h4 class="inline">
+        <span class="label label-default">{{this}}</span>
+      </h4>
+    {{/each}}
   {{else}}
     <p>
       None
@@ -232,7 +253,7 @@
 </template>
 
 <template name="rememberThisUrl">
-  {{#if remindToSaveUrl}}
+  {{#if getSession "remindToSaveUrl"}}
     <div class="alert alert-warning alert-dismissible" role="alert"
         style="display: inline-block; margin-top: 25px;">
       <button id="dismissRemindSaveUrl" type="button" class="close"
