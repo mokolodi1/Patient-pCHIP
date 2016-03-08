@@ -9,7 +9,9 @@ parser.add_option("--mutations",dest="mutations",action="store",default=None)
 parser.add_option("--amps",dest="amps",action="store",default=None)
 parser.add_option("--dels",dest="dels",action="store",default=None)
 parser.add_option("--tfs",dest="tfs",action="store",default=None)
+parser.add_option("--output",dest="output",action="store",default=None)
 (opts, args) = parser.parse_args()
+import os
 
 def parseNet(file):
 
@@ -63,4 +65,46 @@ for gene in nodes:
 			printstr += '\t0'
 	print printstr
 	
+nodes = parseNet(args[0])
+header = ['Gene', 'Kinases', 'Mutations', 'Amps', 'Dels', 'TFs']
+print '\t'.join(header)
+for gene in nodes:
+	printstr = gene
+	for label in header:
+		if label in data and gene in data[label]:
+			printstr += '\t1'
+		else:
+			printstr += '\t0'
+	print printstr
+
+# print out data files 	
+if not os.path.isdir(opts.output):
+	os.mkdir(opts.output)
+
+fh = open(opts.output+'/node.data.txt', 'w')
+header = ['Gene', 'Mutations', 'Amps', 'Dels', 'TFs']
+fh.write( '\t'.join(header)+'\n' )
+for gene in nodes:
+	printstr = gene
+	for label in header:
+		if label in data and gene in data[label]:
+			printstr += '\t1'
+		else:
+			printstr += '\t0'
+	fh.write( printstr+'\n' )
+fh.close()
+
+fh = open(opts.output+'/kinase.data.txt', 'w')
+header = ['Gene', 'Kinases']
+fh.write( '\t'.join(header)+'\n' )
+for gene in nodes:
+	printstr = gene
+	for label in header:
+		if label in data and gene in data[label]:
+			printstr += '\t1'
+		else:
+			printstr += '\t0'
+	fh.write( printstr+'\n' )
+fh.close()
+
 
