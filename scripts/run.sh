@@ -15,12 +15,14 @@ del="$9:None"
 echo "about to start mapPatient"
 
 mkdir -p $output
+# will also make kinase.data.txt and node.data.txt
 $BASEDIR/makeDataInput.py \
 	--tfs $downstream_nodes \
 	--kinases $kinases \
 	--mutations $mutation \
 	--amps $amp \
 	--dels $del \
+	--output $output \
 	$scaffold > $output/network.data.txt
 
 # map patient data to get a network from the scaffold
