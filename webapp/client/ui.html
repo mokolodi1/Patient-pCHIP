@@ -44,36 +44,9 @@
           label-class="h4" input-col-class="col-md-4 col-sm-6 col-xs-12"
           value="drake_paull"}}
       </div>
-
-      <!-- {{#if afFieldValueIs name="scaffoldNetwork" value="drake_paull"}} -->
-        <div class="col-sm-6 col-xs-12">
-          <div class="form-group" data-required="true">
-            <h4 class="h4 control-label">
-              Load data from <i>Drake Paull et al 2016</i>
-            </h4>
-            <div class="btn-group">
-              <button class="btn btn-info dropdown-toggle" type="button"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select a sample
-                <span class="caret"></span>
-              </button>
-
-              <ul class="dropdown-menu">
-                {{#each getSamples}}
-                  <li>
-                    <a data-sample-name={{this}} href="" class="load-sample-data">
-                      {{this}}
-                    </a>
-                  </li>
-                {{/each}}
-              </ul>
-            </div>
-          </div>
-        </div>
-      <!-- {{/if}} -->
     </div>
 
-    <!-- <div class="btn-group">
+    <div class="btn-group">
       <button class="btn btn-info btn-lg dropdown-toggle" type="button"
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Load data from <i>Drake Paull et al 2016</i>
@@ -89,7 +62,7 @@
           </li>
         {{/each}}
       </ul>
-    </div> -->
+    </div>
 
 
 
