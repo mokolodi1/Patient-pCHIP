@@ -63,7 +63,7 @@ jquery@1.11.4
 kadira:blaze-layout@2.3.0
 kadira:flow-router@2.10.1
 launch-screen@1.0.4
-limax:circlemap-graph@0.0.2
+limax:circlemap-graph@0.0.3
 livedata@1.0.15
 logging@1.0.8
 mdg:validation-error@0.2.0
