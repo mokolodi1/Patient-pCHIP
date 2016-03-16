@@ -1,0 +1,6 @@
+{
+  "networkDataFile": "/projects/sysbio/pCHIPS_webapp/Patient-pCHIP/scripts/makeDataInput.py",
+  "mapPatient": "/projects/sysbio/pCHIPS_webapp/Patient-pCHIP/scripts/run.sh",
+  "scaffold": "/projects/sysbio/pCHIPS_webapp/Patient-pCHIP/scripts/drake_paull_scaffold.txt",
+  "gene_universe": "/projects/sysbio/pCHIPS_webapp/Patient-pCHIP/scripts/GSEA_SETS/multinet.genes.lst"
+}
