@@ -18,9 +18,11 @@ Options:
 ## Modified By: Sam Ng, Evan Paull
 ## Last Updated: 5/23/15
 import getopt, math, os, sys, re
+from matplotlib import use
+import matplotlib.pyplot as plt
 from matplotlib import *
-use('Agg')
 from pylab import *
+use('Agg')
 from random import random
 import mData
 
@@ -290,8 +292,8 @@ def plotCircle(imgFile, label = "", centerCol = rgb(255, 255, 255).tohex(), circ
 	## image settings
 	imgSize = (width, width)
 	fig = plt.figure(figsize=imgSize, dpi=300, frameon=True, facecolor='w')
-	axes([0, 0, 1, 1], frameon=True, axisbg='w')
-	axis('off')
+	plt.axes([0, 0, 1, 1], frameon=True, axisbg='w')
+	plt.axis('off')
 	circleWid = (outerRadTotal-innerRadTotal)/float(len(circleCols))
 	
 	## color center
@@ -313,7 +315,7 @@ def plotCircle(imgFile, label = "", centerCol = rgb(255, 255, 255).tohex(), circ
 	x, y = polar(outerRad, 1)
 	X.append(x)
 	Y.append(y)
-	fill(X, Y, centerCol, lw = 1, ec = centerCol)
+	plt.fill(X, Y, centerCol, lw = 1, ec = centerCol)
 	
 	## color rings
 	isLastRing = False
@@ -337,7 +339,7 @@ def plotCircle(imgFile, label = "", centerCol = rgb(255, 255, 255).tohex(), circ
 				t0 = float(j)/len(circleCols[i])
 				t1 = float(j+0.5)/len(circleCols[i]) - wedge
 				X, Y = getPolarSegments(t0, t1, innerRad, outerRad)
-				fill(X, Y, circleCols[i][j], lw = 1, ec = circleCols[i][j])
+				plt.fill(X, Y, circleCols[i][j], lw = 1, ec = circleCols[i][j])
 
 				# add wedge color
 				t0 = float(j+0.5)/len(circleCols[i]) - wedge
@@ -349,14 +351,14 @@ def plotCircle(imgFile, label = "", centerCol = rgb(255, 255, 255).tohex(), circ
 				t0 = float(j+0.5)/len(circleCols[i]) + wedge
 				t1 = float(j+1.0)/len(circleCols[i])
 				X, Y = getPolarSegments(t0, t1, innerRad, outerRad)
-				fill(X, Y, circleCols[i][j], lw = 1, ec = circleCols[i][j])
+				plt.fill(X, Y, circleCols[i][j], lw = 1, ec = circleCols[i][j])
 
 			else:
 				t0 = float(j)/len(circleCols[i])
 				t1 = float(j+1)/len(circleCols[i])
 				X, Y = getPolarSegments(t0, t1, innerRad, outerRad)
 
-				fill(X, Y, circleCols[i][j], lw = 1, ec = circleCols[i][j])
+				plt.fill(X, Y, circleCols[i][j], lw = 1, ec = circleCols[i][j])
 
 		# hack it to add another small inner ring tracking categories
 		last = 0
@@ -377,18 +379,18 @@ def plotCircle(imgFile, label = "", centerCol = rgb(255, 255, 255).tohex(), circ
 			if color_selector % 3 == 2:
 				color = rgb(200,200,255)
 
-			fill(X, Y, color.tohex() , lw = 1, ec = color.tohex())
+			plt.fill(X, Y, color.tohex() , lw = 1, ec = color.tohex())
 
 			color_selector += 1
 			last = j
 				
 	
 	## save image
-	text(0, 0, label, ha='center', va='center')
-	xlim(-0.5, 0.5)
-	ylim(-0.5, 0.5)
-	savefig(imgFile, transparent=True)
-	close()
+	plt.text(0, 0, label, ha='center', va='center')
+	plt.xlim(-0.5, 0.5)
+	plt.ylim(-0.5, 0.5)
+	plt.savefig(imgFile, transparent=True)
+	plt.close()
 
 def parseColorScheme(file):
 
