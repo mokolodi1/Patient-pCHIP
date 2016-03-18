@@ -54,20 +54,8 @@ data['Dels'] = parseList(opts.dels)
 data['TFs'] = parseList(opts.tfs)
 
 nodes = parseNet(args[0])
-header = ['Gene', 'Kinases', 'Mutations', 'Amps', 'Dels', 'TFs']
-print '\t'.join(header)
-for gene in nodes:
-	printstr = gene
-	for label in header:
-		if label in data and gene in data[label]:
-			printstr += '\t1'
-		else:
-			printstr += '\t0'
-	print printstr
-	
-nodes = parseNet(args[0])
-header = ['Gene', 'Kinases', 'Mutations', 'Amps', 'Dels', 'TFs']
-print '\t'.join(header)
+header = ['Kinases', 'Mutations', 'Amps', 'Dels', 'TFs']
+print 'Gene'+'\t'+'\t'.join(header)
 for gene in nodes:
 	printstr = gene
 	for label in header:
@@ -82,8 +70,8 @@ if not os.path.isdir(opts.output):
 	os.mkdir(opts.output)
 
 fh = open(opts.output+'/node.data.txt', 'w')
-header = ['Gene', 'Mutations', 'Amps', 'Dels', 'TFs']
-fh.write( '\t'.join(header)+'\n' )
+header = ['Mutations', 'Amps', 'Dels', 'TFs']
+fh.write( 'Gene'+'\t'+'\t'.join(header)+'\n' )
 for gene in nodes:
 	printstr = gene
 	for label in header:
@@ -95,8 +83,8 @@ for gene in nodes:
 fh.close()
 
 fh = open(opts.output+'/kinase.data.txt', 'w')
-header = ['Gene', 'Kinases']
-fh.write( '\t'.join(header)+'\n' )
+header = ['Kinases']
+fh.write( 'Gene\t'+'\t'.join(header)+'\n' )
 for gene in nodes:
 	printstr = gene
 	for label in header:
