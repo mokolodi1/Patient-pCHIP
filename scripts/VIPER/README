@@ -1,0 +1,13 @@
+This includes the implememtation for VIPER, an algorithm that operates on 
+RNA-Seq and Microarray data and is implemented in R. It uses the Dockerized 
+version, which must be installed: see the test scripts here to run a single
+sample against a background of TCGA normals. 
+
+Also included are scripts for a python implementation written by Evan Paull
+and stored in the 'TieDIE.Private/bin/masterReg' github repository. 
+For reference, a data matrix of PRAD TCGA normals are stored here. RSEM
+normalized values (the 'scaled_estimate' field in the GDAC/TCGA data files) are
+multiplied by 1e6 to get Transcripts Per Million (TPM) values, which are comparable
+across samples. Scripts to both create the null distribution from TCGA data
+as well as to run a new sample against the summary statistics generated from the null are 
+here.
