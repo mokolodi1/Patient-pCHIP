@@ -13,5 +13,9 @@ as well as to run a new sample against the summary statistics generated from the
 here.
 
 
+To create the null model (nes_stats.txt) :
+
+	~/Documents/TieDIE.Private/bin/masterReg -p 1000 -n extended_pathways_transcriptional.sif PRAD.normals.RSEM_TPM.tab
+
 Test PRAD:
 	~/Documents/TieDIE.Private/bin/masterReg -r nes_stats.txt -t PRAD.tumors.test.tab  -n extended_pathways_transcriptional.sif
