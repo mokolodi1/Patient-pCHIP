@@ -11,3 +11,7 @@ multiplied by 1e6 to get Transcripts Per Million (TPM) values, which are compara
 across samples. Scripts to both create the null distribution from TCGA data
 as well as to run a new sample against the summary statistics generated from the null are 
 here.
+
+
+Test PRAD:
+	~/Documents/TieDIE.Private/bin/masterReg -r nes_stats.txt -t PRAD.tumors.test.tab  -n extended_pathways_transcriptional.sif
