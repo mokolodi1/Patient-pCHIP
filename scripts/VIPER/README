@@ -19,3 +19,24 @@ To create the null model (nes_stats.txt) :
 
 Test PRAD:
 	~/Documents/TieDIE.Private/bin/masterReg -r nes_stats.txt -t PRAD.tumors.test.tab  -n extended_pathways_transcriptional.sif
+
+
+Validation:
+
+	I tested the code by building a background with PRAD normal samples:
+		~/Documents/TieDIE.Private/bin/masterReg -p 1000 -n extended_pathways_transcriptional.sif PRAD.normals.RSEM_TPM.tab
+
+	Then testing a collection of normals, and a collection of tumors against the background:
+
+		~/Documents/TieDIE.Private/bin/masterReg -r nes_stats.q_01.txt -t PRAD.tumors_select.RSEM_TPM.tab  -n extended_pathways_transcriptional.sif > true.discoveries.tab
+		~/Documents/TieDIE.Private/bin/masterReg -r nes_stats.q_01.txt -t PRAD.normals.RSEM_TPM.tab  -n extended_pathways_transcriptional.sif > false.discoveries.tab
+
+	A script here:
+		./scripts/format_test_data.py  > test.results.tab
+
+	Creates the output format for an R script:
+
+		./plot_validate.R
+
+	And displays the frequency of each master regulator found for the tumor samples and the normal (background) distributions. The p-value should be 
+	*very* significant!
